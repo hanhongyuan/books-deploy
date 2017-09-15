@@ -8,8 +8,7 @@ assignFloatingIpToClusterTask(() => purgeTask());
 function assignFloatingIpToClusterTask(fn) {
   log('TASK Assign Floating Ip To Cluster');
   getDropletIdByName(`${clusterId}-master-1`, id => {
-    assignFloatingIp(id);
-    fn();
+    assignFloatingIp(id, fn);
   });
 }
 
@@ -25,13 +24,14 @@ function getDropletIdByName(name, fn) {
   });
 }
 
-function assignFloatingIp(dropletId) {
+function assignFloatingIp(dropletId, fn) {
   const path = `/v2/floating_ips/${floatingIp}/actions`;
   const method = 'POST';
   const data = `{"type":"assign","droplet_id":"${dropletId}"}`;
   doRequest({ path, method, data }, (body, status) => {
     const message = `assign floating IP ${floatingIp} to droplet with ID: ${dropletId}`;
     log(status === 201 ? `Successfully ${message}` : `Fail to ${message}`);
+    fn();
   });
 }
 
