@@ -4,7 +4,7 @@ const floatingIp = process.env.FLOATING_IP;
 const clusterId = process.env.CLUSTER_ID;
 
 assignFloatingIpToClusterTask(() => {
-  setTimeout(purgeTask(), 5000);
+  setTimeout(purgeTask, 5000);
 });
 
 function assignFloatingIpToClusterTask(fn) {
