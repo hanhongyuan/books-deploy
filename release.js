@@ -1,24 +1,16 @@
 const https = require('https');
 const token = process.env.DIGITAL_OCEAN_TOKEN;
-const floatingIp = '67.207.71.169';
-const clusterId = '8ce020';
+const floatingIp = process.env.FLOATING_IP;
+const clusterId = process.env.CLUSTER_ID;
 
-const args = process.argv.slice(2);
+assignFloatingIpToClusterTask(() => purgeTask());
 
-switch (args[0]) {
-  case 'assign':
-    assignFloatingIpToClusterTask();
-    break;
-  case 'purge':
-    purgeTask();
-    break;
-  default:
-    log('node task.js [assign clusterId | purge]')
-}
-
-function assignFloatingIpToClusterTask() {
+function assignFloatingIpToClusterTask(fn) {
   log('TASK Assign Floating Ip To Cluster');
-  getDropletIdByName(`${clusterId}-master-1`, id => assignFloatingIp(id));
+  getDropletIdByName(`${clusterId}-master-1`, id => {
+    assignFloatingIp(id);
+    fn();
+  });
 }
 
 function getDropletIdByName(name, fn) {
