@@ -15,9 +15,13 @@ function assignFloatingIpToClusterTask(fn) {
 
 function getDropletIdByName(name, fn) {
   getDroplets(droplets => {
-    const id = droplets.find(d => d.name === name).id;
-    log(`Droplet ${name} has ID: ${id}`);
-    fn(id);
+    const droplet = droplets.find(d => d.name === name);
+    if (droplet) {
+      log(`Droplet ${name} has ID: ${droplet.id}`);
+      fn(droplet.id);
+    } else {
+      log(`Droplet ${name} was not found`);
+    }
   });
 }
 
