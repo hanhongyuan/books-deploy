@@ -3,7 +3,9 @@ const token = process.env.DIGITAL_OCEAN_TOKEN;
 const floatingIp = process.env.FLOATING_IP;
 const clusterId = process.env.CLUSTER_ID;
 
-assignFloatingIpToClusterTask(() => purgeTask());
+assignFloatingIpToClusterTask(() => {
+  setTimeout(purgeTask(), 5000);
+});
 
 function assignFloatingIpToClusterTask(fn) {
   log('TASK Assign Floating Ip To Cluster');
@@ -62,8 +64,8 @@ function getDroplets(fn) {
 
 function deleteDroplets(droplets) {
   droplets.forEach(d => {
-    const name = `droplet ${d.name} with ID: ${d.id}`;
-    log(`Deleting ${name}`);
+    const name = `${d.name} with ID: ${d.id}`;
+    log(`Deleting droplet ${name}`);
     const path = `/v2/droplets/${d.id}`;
     const method = 'DELETE';
     doRequest({ path, method }, (body, status) => {
