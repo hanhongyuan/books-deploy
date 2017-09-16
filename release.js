@@ -1,7 +1,9 @@
 const https = require('https');
 const token = process.env.DIGITAL_OCEAN_TOKEN;
 const floatingIp = process.env.FLOATING_IP;
-const clusterId = process.env.CLUSTER_ID;
+
+const args = process.argv.slice(2);
+const clusterId = args[0];
 
 assignFloatingIpToClusterTask(() => {
   setTimeout(purgeTask, 5000);
