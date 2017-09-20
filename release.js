@@ -1,12 +1,16 @@
 const https = require('https');
+const nodemailer = require('nodemailer');
 const token = process.env.DIGITAL_OCEAN_TOKEN;
 const floatingIp = process.env.FLOATING_IP;
+const mailCiPassword = process.env.MAIL_CI_PASSWORD;
 
 const args = process.argv.slice(2);
 const clusterId = args[0];
 
 assignFloatingIpToClusterTask(() => {
-  setTimeout(purgeTask, 5000);
+  setTimeout(() => purgeTask(() => {
+    mail(`Books app deployed to digitalocean. Swarm ID: ${clusterId}`);
+  }), 5000);
 });
 
 function assignFloatingIpToClusterTask(fn) {
@@ -39,9 +43,9 @@ function assignFloatingIp(dropletId, fn) {
   });
 }
 
-function purgeTask() {
+function purgeTask(fn) {
   log('TASK Purge');
-  getClusterDropletsWithNoFloatingIp(ds => deleteDroplets(ds));
+  getClusterDropletsWithNoFloatingIp(ds => deleteDroplets(ds, fn));
 }
 
 function getClusterDropletsWithNoFloatingIp(fn) {
@@ -64,14 +68,15 @@ function getDroplets(fn) {
   doRequest({ path, method }, body => fn(body.droplets));
 }
 
-function deleteDroplets(droplets) {
-  droplets.forEach(d => {
+function deleteDroplets(droplets, fn) {
+  droplets.forEach((d, index) => {
     const name = `${d.name} with ID: ${d.id}`;
     log(`Deleting droplet ${name}`);
     const path = `/v2/droplets/${d.id}`;
     const method = 'DELETE';
     doRequest({ path, method }, (body, status) => {
       log(status === 204 ? `Droplet ${name} has been removed successuly` : `Droplet ${name} deletion failed`);
+      if (fn && index === droplets.length - 1) fn(status)
     })
   })
 }
@@ -111,4 +116,33 @@ function log() {
   write('>>>>>> ');
   args.forEach(m => write(JSON.stringify(m) + ' '));
   write('\n')
+}
+
+function mail(message) {
+
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: "vitalcodeci@gmail.com",
+      pass: mailCiPassword
+    }
+  });
+
+
+  const mailOptions = {
+    from: 'vitalcodeci@gmail.com',
+    to: 'vitaliy.kuznetsov@yahoo.co.uk',
+    subject: 'Vital Code CI',
+    text: message
+  };
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      log(error);
+    } else {
+      log('Email sent: ' + info.response);
+    }
+  });
 }

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "======>>>>>> Installing dependencies ..." \
+    && npm install
+
 SWARM_ID=$(uuidgen | cut -c 1-6)
 echo "======>>>>>> Starting swarm with ID $SWARM_ID ..."
 
