@@ -80,7 +80,7 @@ function deleteDroplets(droplets, fn) {
     })
   });
   if (fn && droplets.length === 0) {
-    fn(status);
+    fn();
   }
 }
 
