@@ -78,7 +78,10 @@ function deleteDroplets(droplets, fn) {
       log(status === 204 ? `Droplet ${name} has been removed successuly` : `Droplet ${name} deletion failed`);
       if (fn && index === droplets.length - 1) fn(status)
     })
-  })
+  });
+  if (fn && droplets.length === 0) {
+    fn(status);
+  }
 }
 
 function doRequest({ path, method, data }, fn) {
