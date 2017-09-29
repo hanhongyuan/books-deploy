@@ -105,7 +105,7 @@ services:
         constraints: [node.role == manager]
 
   graphiql:
-    image: vitalcode/auth-graphiql
+    image: vitalcode/auth-graphiql:0.3.0
     ports: # remove
       - 3083:3000
     networks:
