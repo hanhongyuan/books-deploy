@@ -38,8 +38,8 @@ WORKER_OPTIONS="--driver digitalocean
 
 # Optionally set ssh-key-fingerprint
 [ -v DIGITAL_OCEAN_SSH_KEY_FINGERPRINT ] && \
-    MASTER_OPTIONS = ${MASTER_OPTIONS} + " --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT} --digitalocean-ssh-user=root" && \
-    WORKER_OPTIONS = ${WORKER_OPTIONS} + " --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT} --digitalocean-ssh-user=root"
+    MASTER_OPTIONS = "${MASTER_OPTIONS} --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT} --digitalocean-ssh-user=root" && \
+    WORKER_OPTIONS = "${WORKER_OPTIONS} --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT} --digitalocean-ssh-user=root"
 
 echo "MASTER_OPTIONS=${MASTER_OPTIONS}"
 echo "WORKER_OPTIONS=${WORKER_OPTIONS}"
