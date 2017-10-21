@@ -55,17 +55,12 @@ services:
       - xpack.security.enabled=false
       - http.cors.enabled=true
       - http.cors.allow-origin=*
-      - bootstrap.memory_lock=true
       - node.master=true
       - node.data=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.zen.ping.unicast.hosts=elasticsearch
       - discovery.zen.minimum_master_nodes=1
       - network.publish_host=elasticsearch
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
     deploy:
       resources:
         limits:
@@ -82,17 +77,12 @@ services:
     environment:
       - cluster.name=robotic
       - xpack.security.enabled=false
-      - bootstrap.memory_lock=true
       - node.master=false
       - node.data=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.zen.ping.unicast.hosts=elasticsearch
       - discovery.zen.minimum_master_nodes=1
       - network.publish_host=$${HOSTNAME}
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
     deploy:
       resources:
         limits:
