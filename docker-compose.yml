@@ -160,6 +160,55 @@ services:
       placement:
         constraints: [node.role == manager]
 
+  logspout:
+    depends_on:
+      - kafka
+      - zk
+      - logstash
+    image: vitalcode/events-logspout-logstash
+    ports:
+      - 8000:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - LOGSPOUT=ignore
+    networks:
+      - events-network
+    command: syslog://logstash:5000
+    deploy:
+      mode: global
+
+  logstash:
+    depends_on:
+      - elasticsearch
+    image: vitalcode/events-logstash
+    environment:
+      - LOGSPOUT=ignore
+    networks:
+      - events-network
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    depends_on:
+      - logspout
+
+  kibana:
+    depends_on:
+      - elasticsearch
+    image: docker.elastic.co/kibana/kibana:5.3.1
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - LOGSPOUT=ignore
+    networks:
+      - events-network
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    depends_on:
+      - logstash
+
 networks:
   events-network:
 
