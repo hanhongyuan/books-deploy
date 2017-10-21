@@ -42,42 +42,58 @@ services:
         constraints: [node.role == worker]
 
   elasticsearch:
-    image: ypereirareis/elasticsearch-head:1.7.5
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.4.3
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
     networks:
       - events-network
-    ports: # remove
-      - 9300:9300
+    ports:
       - 9200:9200
-    command:
-      - -Des.http.cors.enabled=true
-      - -Des.cluster.name=robotic
-      - -Des.index.number_of_shards=5
-      - -Des.index.number_of_replicas=0
-      - -Des.discovery.zen.ping.unicast.hosts=elasticsearch
-      - -Des.node.master=true
-      - -Des.node.data=true
-      - -Des.iscovery.zen.minimum_master_nodes=1
-      - -Des.discovery.zen.ping.multicast.enabled=false
-      - -Des.network.publish_host=elasticsearch
+      - 9300:9300
+    environment:
+      - cluster.name=robotic
+      - xpack.security.enabled=false
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - bootstrap.memory_lock=true
+      - node.master=true
+      - node.data=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.zen.ping.unicast.hosts=elasticsearch
+      - discovery.zen.ping.multicast.enabled=false
+      - iscovery.zen.minimum_master_nodes=1
+      - network.publish_host=elasticsearch
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
     deploy:
       placement:
         constraints: [node.role == manager]
 
   elasticsearch-data:
-    image: ypereirareis/elasticsearch-head:1.7.5
-    command:
-      - -Des.http.cors.enabled=true
-      - -Des.cluster.name=robotic
-      - -Des.index.number_of_shards=5
-      - -Des.index.number_of_replicas=0
-      - -Des.discovery.zen.ping.unicast.hosts=elasticsearch
-      - -Des.node.master=false
-      - -Des.node.data=true
-      - -Des.iscovery.zen.minimum_master_nodes=1
-      - -Des.discovery.zen.ping.multicast.enabled=false
-      - -Des.network.publish_host=$${HOSTNAME}
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.4.3
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
     networks:
       - events-network
+    environment:
+      - cluster.name=robotic
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - node.master=false
+      - node.data=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.zen.ping.unicast.hosts=elasticsearch
+      - discovery.zen.ping.multicast.enabled=false
+      - iscovery.zen.minimum_master_nodes=1
+      - network.publish_host=$${HOSTNAME}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
     deploy:
       mode: global
       placement:
@@ -116,6 +132,15 @@ services:
       mode: global
       placement:
         constraints: [node.role == worker]
+
+  head:
+    image: mobz/elasticsearch-head:5
+    networks:
+      - events-network
+    ports: # remove
+      - 9100:9100
+    depends_on:
+      - elasticsearch
 
   visualizer:
     image: manomarks/visualizer:latest
