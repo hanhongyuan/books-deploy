@@ -161,13 +161,9 @@ services:
         constraints: [node.role == manager]
 
   logspout:
-    depends_on:
-      - kafka
-      - zk
-      - logstash
     image: vitalcode/events-logspout-logstash
     ports:
-      - 8000:80
+      - 8010:80
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
@@ -177,10 +173,10 @@ services:
     command: syslog://logstash:5000
     deploy:
       mode: global
+    depends_on:
+      - logstash
 
   logstash:
-    depends_on:
-      - elasticsearch
     image: vitalcode/events-logstash
     environment:
       - LOGSPOUT=ignore
@@ -190,11 +186,9 @@ services:
       placement:
         constraints: [node.role == manager]
     depends_on:
-      - logspout
+      - elasticsearch
 
   kibana:
-    depends_on:
-      - elasticsearch
     image: docker.elastic.co/kibana/kibana:5.3.1
     ports:
       - 5601:5601
@@ -207,7 +201,7 @@ services:
       placement:
         constraints: [node.role == manager]
     depends_on:
-      - logstash
+      - elasticsearch
 
 networks:
   events-network:
