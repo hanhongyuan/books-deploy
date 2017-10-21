@@ -37,10 +37,10 @@ WORKER_OPTIONS="--driver digitalocean
 
 
 # Optionally set ssh-key-fingerprint
-if [ -z "$DIGITAL_OCEAN_SSH_KEY_FINGERPRINT" ]; then
-    MASTER_OPTIONS = ${MASTER_OPTIONS} + " --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT} --digitalocean-ssh-user=root"
+[ -v DIGITAL_OCEAN_SSH_KEY_FINGERPRINT ] && \
+    MASTER_OPTIONS = ${MASTER_OPTIONS} + " --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT} --digitalocean-ssh-user=root" && \
     WORKER_OPTIONS = ${WORKER_OPTIONS} + " --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT} --digitalocean-ssh-user=root"
-fi
+
 
 # Create master node
 MASTER_NODE=${PREFIX}-master-1
