@@ -147,7 +147,7 @@ services:
       - elasticsearch
 
   visualizer:
-    image: manomarks/visualizer:latest
+    image: dockersamples/visualizer:stable
     ports: # remove
       - 8080:8080
     volumes:
