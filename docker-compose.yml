@@ -165,3 +165,4 @@ networks:
 
 volumes:
   postgres-data:
+  elastic-data:
