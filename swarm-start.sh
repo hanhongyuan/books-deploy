@@ -15,6 +15,8 @@ echo "===== with [${SWARM_NUM_MASTER}] [${SWARM_MEMORY_MASTER}] master nodes"
 [ -z ${SWARM_MEMORY_WORKER} ] && SWARM_MEMORY_WORKER=4gb
 echo "===== with [${SWARM_NUM_WORKER}] [${SWARM_MEMORY_WORKER}] worker nodes"
 
+DIGITAL_OCEAN_REGION=Du6EfLp42BsHc8RCwjH5pxbOFxLnFI3czKXof1tjwIM
+
 # Unique prefix
 PREFIX=$1
 
@@ -24,6 +26,7 @@ MASTER_OPTIONS="--driver digitalocean
                 --digitalocean-region=${DIGITAL_OCEAN_REGION} 
                 --digitalocean-size=${SWARM_MEMORY_MASTER}
                 --engine-opt experimental=true
+                --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_REGION}
                 --swarm-experimental"
                 
 WORKER_OPTIONS="--driver digitalocean 
@@ -31,6 +34,7 @@ WORKER_OPTIONS="--driver digitalocean
                 --digitalocean-region=${DIGITAL_OCEAN_REGION} 
                 --digitalocean-size=${SWARM_MEMORY_WORKER}
                 --engine-opt experimental=true
+                --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_REGION}
                 --swarm-experimental"
 
 # Create master node
