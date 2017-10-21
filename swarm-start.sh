@@ -33,19 +33,11 @@ WORKER_OPTIONS="--driver digitalocean
                 --engine-opt experimental=true
                 --swarm-experimental"
 
-
-# Optionally set ssh-key-fingerprint
-[ ${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT} ] && \
-    MASTER_OPTIONS="${MASTER_OPTIONS} --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT}" && \
-    WORKER_OPTIONS="${WORKER_OPTIONS} --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT}"
-
-echo "MASTER_OPTIONS=${MASTER_OPTIONS}"
-echo "WORKER_OPTIONS=${WORKER_OPTIONS}"
-
 # Create master node
 MASTER_NODE=${PREFIX}-master-1
 docker-machine create ${MASTER_OPTIONS} ${MASTER_NODE}
 docker-machine ssh ${MASTER_NODE} sysctl -w vm.max_map_count=262144
+cat ./id_rsa.pub | docker-machine ssh ${MASTER_NODE} "cat >> ~/.ssh/authorized_keys"
 eval $(docker-machine env ${MASTER_NODE})
 
 # get swarm master ip
@@ -64,6 +56,7 @@ for i in $(seq "${SWARM_NUM_WORKER}"); do
   WORKER_NODE=${PREFIX}-worker-${i}
   docker-machine create ${WORKER_OPTIONS} ${WORKER_NODE}
   docker-machine ssh ${WORKER_NODE} sysctl -w vm.max_map_count=262144
+  cat ./id_rsa.pub | docker-machine ssh ${WORKER_NODE} "cat >> ~/.ssh/authorized_keys"
   eval $(docker-machine env ${WORKER_NODE})
   docker swarm join --token ${SWARM_TOKEN_WORKER} ${SWARM_MASTER_IP}:2733
 done
