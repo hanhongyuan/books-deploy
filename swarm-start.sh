@@ -15,7 +15,7 @@ echo "===== with [${SWARM_NUM_MASTER}] [${SWARM_MEMORY_MASTER}] master nodes"
 [ -z ${SWARM_MEMORY_WORKER} ] && SWARM_MEMORY_WORKER=4gb
 echo "===== with [${SWARM_NUM_WORKER}] [${SWARM_MEMORY_WORKER}] worker nodes"
 
-DIGITAL_OCEAN_SSH_KEY_FINGERPRINT=Du6EfLp42BsHc8RCwjH5pxbOFxLnFI3czKXof1tjwIM
+DIGITAL_OCEAN_SSH_KEY_FINGERPRINT=1e:6a:59:0f:fd:5d:23:4d:5e:b1:ec:8f:6b:b0:71:60
 
 # Unique prefix
 PREFIX=$1
