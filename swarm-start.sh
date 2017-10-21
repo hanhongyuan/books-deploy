@@ -41,6 +41,8 @@ WORKER_OPTIONS="--driver digitalocean
     MASTER_OPTIONS = ${MASTER_OPTIONS} + " --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT} --digitalocean-ssh-user=root" && \
     WORKER_OPTIONS = ${WORKER_OPTIONS} + " --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT} --digitalocean-ssh-user=root"
 
+echo "MASTER_OPTIONS=${MASTER_OPTIONS}"
+echo "WORKER_OPTIONS=${WORKER_OPTIONS}"
 
 # Create master node
 MASTER_NODE=${PREFIX}-master-1
