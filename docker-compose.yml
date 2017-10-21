@@ -67,8 +67,10 @@ services:
       memlock:
         soft: -1
         hard: -1
-    mem_limit: 1g
     deploy:
+      resources:
+        limits:
+          memory: 1g
       placement:
         constraints: [node.role == manager]
 
@@ -93,8 +95,10 @@ services:
       memlock:
         soft: -1
         hard: -1
-    mem_limit: 1g
     deploy:
+      resources:
+        limits:
+          memory: 1g
       mode: global
       placement:
         constraints: [node.role == worker]
