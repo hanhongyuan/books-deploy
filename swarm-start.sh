@@ -26,7 +26,6 @@ MASTER_OPTIONS="--driver digitalocean
                 --digitalocean-region=${DIGITAL_OCEAN_REGION} 
                 --digitalocean-size=${SWARM_MEMORY_MASTER}
                 --engine-opt experimental=true
-                --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT}
                 --swarm-experimental"
                 
 WORKER_OPTIONS="--driver digitalocean 
@@ -34,8 +33,14 @@ WORKER_OPTIONS="--driver digitalocean
                 --digitalocean-region=${DIGITAL_OCEAN_REGION} 
                 --digitalocean-size=${SWARM_MEMORY_WORKER}
                 --engine-opt experimental=true
-                --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT}
                 --swarm-experimental"
+
+
+# Optionally set ssh-key-fingerprint
+if [ -z "$DIGITAL_OCEAN_SSH_KEY_FINGERPRINT" ]; then
+    MASTER_OPTIONS = ${MASTER_OPTIONS} + " --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT} --digitalocean-ssh-user=root"
+    WORKER_OPTIONS = ${WORKER_OPTIONS} + " --digitalocean-ssh-key-fingerprint=${DIGITAL_OCEAN_SSH_KEY_FINGERPRINT} --digitalocean-ssh-user=root"
+fi
 
 # Create master node
 MASTER_NODE=${PREFIX}-master-1
