@@ -60,8 +60,7 @@ services:
       - node.data=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.zen.ping.unicast.hosts=elasticsearch
-      - discovery.zen.ping.multicast.enabled=false
-      - iscovery.zen.minimum_master_nodes=1
+      - discovery.zen.minimum_master_nodes=1
       - network.publish_host=elasticsearch
     ulimits:
       memlock:
@@ -88,8 +87,7 @@ services:
       - node.data=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.zen.ping.unicast.hosts=elasticsearch
-      - discovery.zen.ping.multicast.enabled=false
-      - iscovery.zen.minimum_master_nodes=1
+      - discovery.zen.minimum_master_nodes=1
       - network.publish_host=$${HOSTNAME}
     ulimits:
       memlock:
